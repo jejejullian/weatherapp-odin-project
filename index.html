@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/weather-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ramalan Cuaca</title>
+    <link rel="stylesheet" href="./src/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- ===== MAIN HEADER ===== -->
+    <header class="bg-white">
+      <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-8 px-4 sm:px-6 lg:px-8">
+        <!-- Logo section -->
+        <a class="flex items-center gap-1 text-blue-700 font-bold" href="#">
+          <img src="/weather-icon.svg" class="h-8" alt="logo-weather" />
+          <span class="text-nowrap">Forecazt</span>
+        </a>
+
+        <!-- Navigation / City search -->
+        <nav class="relative flex items-center gap-4 w-1/2 sm:max-w-lg" aria-label="City search">
+          <!-- Radar icon -->
+          <a href="#" class="flex items-center scale-none hover:scale-125 duration-200 ease-in-out">
+            <span class="material-symbols-outlined"> radar </span>
+          </a>
+
+          <!-- City search label (visible only on larger screens) -->
+          <label for="search" class="text-nowrap hidden sm:block">Search by City Name</label>
+
+          <!-- City search input -->
+          <input type="text" name="search" id="search" class="w-full px-4 pr-10 py-2 border-2 border-gray-400 focus:border-blue-700 focus:outline-none text-base rounded-3xl" placeholder="City name here" />
+          <span class="material-symbols-outlined absolute right-3 text-gray-500 text-lg">search</span>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+      <!-- Current Weather Information -->
+      <section id="weatherInfo" class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 transition-all duration-500 text-white rounded-none 2xl:rounded-2xl" aria-labelledby="weather-info">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:items-center md:gap-8">
+          <!-- LEFT SIDE: City and Weather Info -->
+          <article aria-label="Current weather" class="justify-self-center md:justify-self-auto text-center md:text-start">
+            <header class="flex flex-col gap-4 leading-14">
+              <h1 id="weatherCity" class="text-6xl md:text-4xl font-semibold break-all"></h1>
+              <p id="weatherDate" class="text-xl leading-14"></p>
+            </header>
+            <p id="weatherTemp" class="text-6xl"></p>
+            <p id="weatherDesc" class="text-xl leading-14 capitalize"></p>
+            <div class="bg-white/20 hover:bg-black/20 w-16 mx-auto md:mx-0 rounded-2xl duration-150 ease-in cursor-pointer">
+              <img id="weatherIcon" src="http://openweathermap.org/img/wn/50n@2x.png" class="w-16 mx-auto md:mx-0" alt="Weather Icon" />
+            </div>
+          </article>
+
+          <!-- RIGHT SIDE: Temperature Settings and Extra Details -->
+          <aside aria-label="Temperature and Theme Settings" class="justify-self-center md:justify-self-end text-right leading-14">
+            <div id="timeDisplay" class="flex items-center justify-center text-6xl font-mono text-white bg-white/20 rounded-2xl border-2 py-6">11:29</div>
+
+            <div class="flex gap-4 justify-between ml-2 my-2">
+              <!-- Temperature Unit Toggle -->
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="switchTemp" class="sr-only peer" />
+                <div
+                  class="w-11 h-6 bg-slate-200 rounded-full peer-checked:bg-slate-800 after:content-[''] after:absolute after:top-1.5 after:left-0.5 after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-white"
+                ></div>
+                <span id="toggleLabel" class="ml-2 text-2xl">&#8457;</span>
+              </label>
+
+              <!-- Theme Switch (Light / Dark) -->
+              <label for="switch-theme" class="relative inline-flex gap-2 cursor-pointer items-center">
+                <input id="switchTheme" type="checkbox" class="peer sr-only" />
+                <div
+                  class="h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-0.5 after:top-1.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all peer-checked:bg-slate-800 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"
+                ></div>
+                <span class="material-symbols-outlined"> moon_stars </span>
+              </label>
+            </div>
+
+            <!-- Weather Details -->
+            <div data-id="feels" class="flex items-center gap-2">
+              <span class="material-symbols-outlined" style="font-size: 2rem"> device_thermostat </span>
+              Feels Like
+              <p id="weatherFeels" class="text-3xl font-normal"></p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined" style="font-size: 2rem"> humidity_percentage </span>
+              <p id="weatherHumidity" class="text-3xl font-normal"></p>
+            </div>
+
+            <div data-id="minmax" class="flex items-center gap-2">
+              <span class="material-symbols-outlined" style="font-size: 2rem"> thermometer </span>
+              <p id="weatherMin" class="text-3xl font-normal"></p>
+              |
+              <span class="material-symbols-outlined" style="font-size: 2rem"> thermostat_arrow_up </span>
+              <p id="weatherMax" class="text-3xl font-normal"></p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section aria-labelledby="hourly-forecast" class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-5 py-3 sm:py-4 lg:py-5 scroll-smooth">
+        <div class="px-4 py-4 rounded-3xl bg-black">
+          <div class="flex gap-4 items-center mb-2 text-white">
+            <span class="material-symbols-outlined" style="font-size: 2rem"> calendar_clock </span>
+            <h2 class="text-2xl font-semibold">Hourly Forecast</h2>
+          </div>
+
+          <div class="flex overflow-x-auto gap-4 p-4 w-full leading-8">
+            <article class="w-32 shrink-0 flex flex-col items-center justify-center rounded-2xl border p-4 bg-gray-800">
+              <p class="font-semibold text-white">Now</p>
+              <img src="http://openweathermap.org/img/wn/09d@2x.png" alt="Rain" class="w-18 drop-shadow-[0_0_20px_#ffff]" />
+              <p class="text-lg font-bold text-white">16° / 20°</p>
+              <p class="text-sm text-gray-300">Rain</p>
+              <p class="text-xs text-gray-400">Rain 86%</p>
+            </article>
+            <article class="w-32 shrink-0 flex flex-col items-center justify-center rounded-2xl border p-4 bg-gray-600">
+              <p class="font-semibold text-white">2 PM</p>
+              <img src="http://openweathermap.org/img/wn/09d@2x.png" alt="Rain" class="w-18 drop-shadow-[0_0_20px_#ffff]" />
+              <p class="text-lg font-bold text-white">16° / 20°</p>
+              <p class="text-sm text-gray-300">Rain</p>
+              <p class="text-xs text-gray-400">Rain 86%</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="daily-forecast" class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-5 py-3 sm:py-4 lg:py-5 scroll-smooth">
+        <div class="px-4 py-4 rounded-3xl bg-black">
+          <div class="flex gap-4 items-center mb-2 text-white">
+            <span class="material-symbols-outlined" style="font-size: 2rem"> calendar_month </span>
+            <h2 class="text-2xl font-semibold">5-Day Forecast</h2>
+          </div>
+
+          <div class="flex overflow-x-auto gap-4 p-4 w-full leading-8">
+            <article class="w-32 shrink-0 flex flex-col items-center justify-center rounded-2xl border p-4 bg-gray-600">
+              <p class="font-semibold text-white">30 Wed</p>
+              <img src="http://openweathermap.org/img/wn/09d@2x.png" alt="Rain" class="w-18 drop-shadow-[0_0_20px_#ffff]" />
+              <p class="text-lg font-bold text-white">16° / 20°</p>
+              <p class="text-sm text-gray-300">Rain</p>
+              <p class="text-xs text-gray-400">Rain 86%</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
