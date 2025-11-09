@@ -1,11 +1,12 @@
 import "./style.css";
 import { getDailyForecast } from "./Modules/weatherApi";
-import { toggleLabel, updateTimeDisplay } from "./Modules/helpers";
+import { toggleLabel, toggleTheme, updateTimeDisplay } from "./Modules/helpers";
 
 window.addEventListener("load", () => {
   toggleLabel();
+  toggleTheme();
   updateTimeDisplay();
   setInterval(updateTimeDisplay, 1000);
   getDailyForecast("subang");
-  setInterval(()=> getDailyForecast('subang'),180000)
+  setInterval(() => getDailyForecast("subang"), 180000);
 });

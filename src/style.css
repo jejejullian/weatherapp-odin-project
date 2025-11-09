@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* menggunakan class .dark*/
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   height: 8px; 
@@ -43,16 +46,19 @@
   background-size: cover;
   background-position: center;
 }
+
 .bg-snow {
   background-image: url("/images/snow.png");
   background-size: cover;
   background-position: center;
 }
+
 .bg-foggy {
   background-image: url("/images/foggy.png");
   background-size: cover;
   background-position: center;
 }
+
 .bg-thunder-storm {
   background-image: url("/images/thunder-storm.png");
   background-size: cover;
@@ -64,9 +70,9 @@
   background-size: cover;
   background-position: center;
 }
+
 .bg-drizzle {
   background-image: url("/images/drizzle.png");
   background-size: cover;
   background-position: center;
 }
-

@@ -1,8 +1,8 @@
 // state.js
 let currentWeather = null;
 
-export function setCurrentWeather(data) {
-  currentWeather = data;
+export function setCurrentWeather(cityData) {
+  currentWeather = cityData;
 }
 
 export function getCurrentWeather() {

@@ -26,13 +26,51 @@ export function kelvinToCelsius(temp) {
 export function toggleLabel() {
   const switchTemp = document.querySelector("#switchTemp");
   const toggleLabel = document.querySelector("#toggleLabel");
-
+  // &#8457: untuk Fahrenheit, &#8451: untuk Celsius
+  if (switchTemp.checked) {
+    toggleLabel.innerHTML = "&#8457;";
+  } else {
+    toggleLabel.innerHTML = "&#8451;";
+  }
   switchTemp.addEventListener("change", () => {
-    const isFahrenHeit = switchTemp.checked;
-    toggleLabel.innerHTML = isFahrenHeit ? "&#8451" : "&#8457";
+    const isFahrenheitSelected = switchTemp.checked;
+    toggleLabel.innerHTML = isFahrenheitSelected ? "&#8457;" : "&#8451;";
     const weatherData = getCurrentWeather();
     if (weatherData) {
-      updateTempDisplay(isFahrenHeit, weatherData);
+      updateTempDisplay(isFahrenheitSelected, weatherData);
+    }
+  });
+}
+
+export function toggleTheme() {
+  const storedTheme = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const switchTheme = document.querySelector("#switchTheme");
+  const themeIcon = document.querySelector("#themeIcon");
+
+  const isDarkMode = storedTheme === "dark" || (!storedTheme && prefersDark);
+
+  if (isDarkMode) {
+    document.documentElement.classList.add("dark");
+    themeIcon.textContent = "moon_stars";
+    switchTheme.checked = true; 
+  } else {
+    document.documentElement.classList.remove("dark");
+    themeIcon.textContent = "sunny";
+    switchTheme.checked = false; 
+  }
+
+  switchTheme.addEventListener("change", () => {
+    const isDark = document.documentElement.classList.contains("dark");
+
+    if (isDark) {
+      document.documentElement.classList.remove("dark");
+      themeIcon.textContent = "sunny";
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.classList.add("dark");
+      themeIcon.textContent = "moon_stars";
+      localStorage.setItem("theme", "dark");
     }
   });
 }
@@ -61,10 +99,10 @@ export function changeBgWeather(weatherType) {
   }
 }
 
-export function updateTimeDisplay(){
-  const timeDisplayEl = document.querySelector('#timeDisplay')
-  const now = new Date()
-  const hours = now.getHours().toString().padStart(2, '0')
-  const minutes = now.getMinutes().toString().padStart(2, '0')
-  timeDisplayEl.textContent =  `${hours}:${minutes}`
+export function updateTimeDisplay() {
+  const timeDisplayEl = document.querySelector("#timeDisplay");
+  const now = new Date();
+  const hours = now.getHours().toString().padStart(2, "0");
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+  timeDisplayEl.textContent = `${hours}:${minutes}`;
 }

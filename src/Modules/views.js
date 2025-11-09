@@ -1,9 +1,9 @@
 import { changeBgWeather, formattedDate, kelvinToCelsius, kelvinToFahrenhiet } from "./helpers";
 
-let isFahrenheit = false;
+let isFahrenheitSelected = false;
 
-export function updateTempDisplay(isFahrenHeit, weatherData) {
-  isFahrenheit = isFahrenHeit;
+export function updateTempDisplay(fahrenheitMode, weatherData) {
+  isFahrenheitSelected = fahrenheitMode;
   renderDailyForecast(weatherData);
 }
 
@@ -25,12 +25,14 @@ export function renderDailyForecast(weatherData) {
     const degreeSym = "&#176;";
     const percentSym = "&#x25;";
     const weatherType = weather[0].main;
+    let tempUnit = "C";
 
-    if (isFahrenheit) {
+    if (isFahrenheitSelected) {
       temp = kelvinToFahrenhiet(temp);
       feels_like = kelvinToFahrenhiet(feels_like);
       temp_min = kelvinToFahrenhiet(temp_min);
       temp_max = kelvinToFahrenhiet(temp_max);
+      tempUnit = "F";
     } else {
       temp = kelvinToCelsius(temp);
       feels_like = kelvinToCelsius(feels_like);
@@ -40,14 +42,14 @@ export function renderDailyForecast(weatherData) {
 
     cityNameEl.textContent = name;
     dateEL.textContent = formattedDate(dt);
-    tempEl.innerHTML = `${Math.round(temp)}${degreeSym}`;
+    tempEl.innerHTML = `${Math.round(temp)}${degreeSym}${tempUnit}`;
     descEl.textContent = description;
     iconEl.src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
     iconEl.alt = description;
-    feelsEl.innerHTML = `${Math.round(feels_like)}${degreeSym}`;
+    feelsEl.innerHTML = `${Math.round(feels_like)}${degreeSym}${tempUnit}`;
     humidityEl.innerHTML = `${humidity}${percentSym}`;
-    minEl.innerHTML = `${Math.round(temp_min)}${degreeSym}`;
-    maxEl.innerHTML = `${Math.round(temp_max)}${degreeSym}`;
+    minEl.innerHTML = `${Math.round(temp_min)}${degreeSym}${tempUnit}`;
+    maxEl.innerHTML = `${Math.round(temp_max)}${degreeSym}${tempUnit}`;
 
     changeBgWeather(weatherType);
   }
