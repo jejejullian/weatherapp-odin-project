@@ -1,6 +1,14 @@
 import { getCurrentWeather } from "./state";
 import { updateTempDisplay } from "./views";
 
+export function kelvinToFahrenhiet(temp) {
+  return ((temp - 273.15) * 9) / 5 + 32;
+}
+
+export function kelvinToCelsius(temp) {
+  return temp - 273.15;
+}
+
 export function formattedDate(dt) {
   const date = new Date(dt * 1000);
   const options = {
@@ -15,18 +23,10 @@ export function formattedDate(dt) {
   return `${weekday} | ${day} ${month} ${year}`;
 }
 
-export function kelvinToFahrenhiet(temp) {
-  return ((temp - 273.15) * 9) / 5 + 32;
-}
-
-export function kelvinToCelsius(temp) {
-  return temp - 273.15;
-}
-
 export function toggleLabel() {
   const switchTemp = document.querySelector("#switchTemp");
   const toggleLabel = document.querySelector("#toggleLabel");
-  // &#8457: untuk Fahrenheit, &#8451: untuk Celsius
+  // &#8457: for Fahrenheit, &#8451: for Celsius
   if (switchTemp.checked) {
     toggleLabel.innerHTML = "&#8457;";
   } else {
@@ -53,11 +53,11 @@ export function toggleTheme() {
   if (isDarkMode) {
     document.documentElement.classList.add("dark");
     themeIcon.textContent = "moon_stars";
-    switchTheme.checked = true; 
+    switchTheme.checked = true;
   } else {
     document.documentElement.classList.remove("dark");
     themeIcon.textContent = "sunny";
-    switchTheme.checked = false; 
+    switchTheme.checked = false;
   }
 
   switchTheme.addEventListener("change", () => {
@@ -105,4 +105,12 @@ export function updateTimeDisplay() {
   const hours = now.getHours().toString().padStart(2, "0");
   const minutes = now.getMinutes().toString().padStart(2, "0");
   timeDisplayEl.textContent = `${hours}:${minutes}`;
+}
+
+export function formatTimeLabel(dt_txt, isNow = false) {
+  if (isNow) return "Now";
+  const date = new Date(dt_txt);
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}.${minutes}`;
 }
