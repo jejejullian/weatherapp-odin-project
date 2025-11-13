@@ -2,9 +2,13 @@ import { changeBgWeather, formattedDate, formatTimeLabel, kelvinToCelsius, kelvi
 
 let isFahrenheitSelected = false;
 
-export function updateTempDisplay(fahrenheitMode, weatherData) {
+export function updateTempDisplay(fahrenheitMode, weatherData, forecastData) {
   isFahrenheitSelected = fahrenheitMode;
   renderDailyForecast(weatherData);
+
+  if(forecastData){
+    renderHourlyForecast(forecastData)
+  }
 }
 
 export function renderDailyForecast(weatherData) {
@@ -71,11 +75,11 @@ export function renderHourlyForecast(weatherData) {
       const degreeSym = "&#176;";
       let tempUnit = "C";
 
-      if(isFahrenheitSelected){
-        temp = kelvinToFahrenhiet(temp)
-        tempUnit = 'F'
+      if (isFahrenheitSelected) {
+        temp = kelvinToFahrenhiet(temp);
+        tempUnit = "F";
       } else {
-        temp = kelvinToCelsius(temp)
+        temp = kelvinToCelsius(temp);
       }
 
       const hourlyForecasItem = document.createElement("article");

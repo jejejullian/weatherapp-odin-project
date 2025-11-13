@@ -1,4 +1,4 @@
-import { getCurrentWeather } from "./state";
+import { getCurrentWeather, getForecastWeather } from "./state";
 import { updateTempDisplay } from "./views";
 
 export function kelvinToFahrenhiet(temp) {
@@ -24,7 +24,7 @@ export function formattedDate(dt) {
 }
 
 export function toggleLabel() {
-  const switchTemp = document.querySelector("#switchTemp");
+  const switchTemp = document.querySelector("#switchTemp"); 
   const toggleLabel = document.querySelector("#toggleLabel");
   // &#8457: for Fahrenheit, &#8451: for Celsius
   if (switchTemp.checked) {
@@ -36,8 +36,9 @@ export function toggleLabel() {
     const isFahrenheitSelected = switchTemp.checked;
     toggleLabel.innerHTML = isFahrenheitSelected ? "&#8457;" : "&#8451;";
     const weatherData = getCurrentWeather();
+    const forecastData = getForecastWeather()
     if (weatherData) {
-      updateTempDisplay(isFahrenheitSelected, weatherData);
+      updateTempDisplay(isFahrenheitSelected, weatherData, forecastData);
     }
   });
 }
