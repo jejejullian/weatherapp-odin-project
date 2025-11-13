@@ -1,5 +1,5 @@
 import { setCurrentWeather, setForecastWeather } from "./state.js";
-import { renderDailyForecast, renderHourlyForecast } from "./views.js";
+import { render5DaysForecast, renderDailyForecast, renderHourlyForecast } from "./views.js";
 
 export async function getDailyForecast(city) {
   try {
@@ -30,6 +30,7 @@ export async function getHourlyForecast(city) {
     const cityData = await response.json();
     setForecastWeather(cityData);
     renderHourlyForecast(cityData);
+    render5DaysForecast(cityData)
   } catch (err) {
     console.error("Failed to fetch weather:", err.message);
   }

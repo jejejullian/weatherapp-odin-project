@@ -1,4 +1,5 @@
-import { changeBgWeather, formattedDate, formatTimeLabel, kelvinToCelsius, kelvinToFahrenhiet } from "./helpers";
+import { changeBgWeather, formatDateLabel, formattedDate, formatTimeLabel, kelvinToCelsius, kelvinToFahrenhiet } from "./helpers";
+import { getDailyForecast } from "./weatherApi";
 
 let isFahrenheitSelected = false;
 
@@ -6,8 +7,9 @@ export function updateTempDisplay(fahrenheitMode, weatherData, forecastData) {
   isFahrenheitSelected = fahrenheitMode;
   renderDailyForecast(weatherData);
 
-  if(forecastData){
-    renderHourlyForecast(forecastData)
+  if (forecastData) {
+    renderHourlyForecast(forecastData);
+    render5DaysForecast(forecastData);
   }
 }
 
@@ -65,12 +67,13 @@ export function renderHourlyForecast(weatherData) {
 
   if (weatherData && weatherData.list) {
     const hourlyData = weatherData.list.slice(0, 8);
+
     for (const item of hourlyData) {
       const { main, weather, dt_txt } = item;
       let { temp, humidity } = main;
       const { description, icon } = weather[0];
 
-      const timeLabel = formatTimeLabel(dt_txt, item === hourlyData[0]);
+      const timeLabel = formatTimeLabel(dt_txt);
 
       const degreeSym = "&#176;";
       let tempUnit = "C";
@@ -90,10 +93,82 @@ export function renderHourlyForecast(weatherData) {
           <p class="text-lg font-bold 
          text-neutral-900 dark:text-white">${Math.round(temp)}${degreeSym}${tempUnit}</p>
           <p class="text-xs font-semibold text-neutral-900 dark:text-gray-300 text-center text-wrap capitalize">${description}</p>
-          <p class="text-xs text-neutral-600 dark:text-gray-400">Rain ${humidity}%</p>
+          <div class="flex items-center mt-0.5">
+            <span class="material-symbols-outlined text-neutral-600 dark:text-gray-400" style="font-size: 1rem"> humidity_percentage </span>
+            <p class="text-xs text-neutral-600 dark:text-gray-400">${humidity}%</p>
+          </div>
       `;
 
       hourlyForecastEl.append(hourlyForecasItem);
+    }
+  }
+}
+
+export function render5DaysForecast(weatherData) {
+  const fiveDaysForecastEl = document.querySelector("#fiveDaysForecast");
+  fiveDaysForecastEl.innerHTML = "";
+  let processedDates = [];
+  let dailyForecasts = [];
+  const today = new Date().toISOString().split("T")[0];
+
+  if (weatherData && weatherData.list) {
+    for (let i = 0; i < weatherData.list.length; i++) {
+      const item = weatherData.list[i];
+      const { dt_txt } = item;
+      const dateLabel = dt_txt.split(" ")[0];
+
+      if (!processedDates.includes(dateLabel) && dateLabel !== today) {
+        const fiveHourlyData = weatherData.list.slice(i, i + 5);
+        dailyForecasts.push({
+          date: dateLabel,
+          items: fiveHourlyData,
+        });
+        processedDates.push(dateLabel);
+
+        if (dailyForecasts.length >= 5) {
+          break;
+        }
+      }
+    }
+
+    for (const dayData of dailyForecasts) {
+      const { date, items } = dayData;
+      const formattedDate = formatDateLabel(date);
+
+      for (const item of items) {
+        const { main, weather, dt_txt } = item;
+        let { temp, humidity } = main;
+        const { description, icon } = weather[0];
+
+        const timeLabel = formatTimeLabel(dt_txt);
+
+        const degreeSym = "&#176;";
+        let tempUnit = "C";
+
+        if (isFahrenheitSelected) {
+          temp = kelvinToFahrenhiet(temp);
+          tempUnit = "F";
+        } else {
+          temp = kelvinToCelsius(temp);
+        }
+
+        const fiveDaysForecastItem = document.createElement("article");
+        fiveDaysForecastItem.className = "w-32 shrink-0 flex flex-col items-center justify-center rounded-2xl p-4 bg-white/85 dark:bg-neutral-900";
+        fiveDaysForecastItem.innerHTML = `
+          <div class="flex flex-col items-center">
+            <p class="font-semibold text-neutral-900 dark:text-white">${formattedDate}</p>
+            <p class="font-semibold text-neutral-900 dark:text-white leading-tight">${timeLabel}</p>
+          </div>
+          <img src="http://openweathermap.org/img/wn/${icon}@2x.png" alt='${description}' class="w-18 drop-shadow-[0_0_20px_#ffff]" />
+          <p class="text-lg font-bold text-neutral-900 dark:text-white">${Math.round(temp)}${degreeSym}${tempUnit}</p>
+          <p class="text-xs font-semibold text-neutral-900 dark:text-gray-300 text-center text-wrap capitalize">${description}</p>
+          <div class="flex items-center mt-0.5">
+            <span class="material-symbols-outlined text-neutral-600 dark:text-gray-400" style="font-size: 1rem"> humidity_percentage </span>
+            <p class="text-xs text-neutral-600 dark:text-gray-400">${humidity}%</p>
+          </div>
+      `;
+        fiveDaysForecastEl.append(fiveDaysForecastItem);
+      }
     }
   }
 }
