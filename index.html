@@ -11,7 +11,7 @@
   <body>
     <!-- ===== MAIN HEADER ===== -->
     <header class="bg-white dark:bg-neutral-900">
-      <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-8 px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto flex flex-col sm:flex-row h-auto max-w-7xl items-center justify-between gap-4 sm:gap-8 px-4 py-2 sm:px-6 lg:px-8">
         <!-- Logo section -->
         <a class="flex items-center gap-1 text-blue-700 dark:text-white font-bold" href="#">
           <img src="/weather-icon.svg" class="h-8" alt="logo-weather" />
@@ -19,24 +19,26 @@
         </a>
 
         <!-- Navigation / City search -->
-        <nav class="relative flex items-center gap-4 w-1/2 sm:max-w-lg" aria-label="City search">
+        <nav class="relative flex items-center justify-center sm:justify-end gap-4 sm:mt-0 w-full sm:max-w-lg" aria-label="City search">
           <!-- Radar icon -->
-          <a href="#" class="flex items-center scale-none hover:scale-125 duration-200 ease-in-out text-neutral-900 dark:text-white">
+          <button type="button" id="radarIcon" class="flex items-center scale-none hover:scale-125 duration-200 ease-in-out text-neutral-900 dark:text-white cursor-pointer">
             <span class="material-symbols-outlined"> radar </span>
-          </a>
+          </button>
 
           <!-- City search label (visible only on larger screens) -->
           <label for="search" class="text-nowrap hidden sm:block text-neutral-900 dark:text-white">Search by City Name</label>
 
           <!-- City search input -->
-          <input
-            type="text"
-            name="search"
-            id="search"
-            class="w-full px-4 pr-10 py-2 border-2 border-gray-400 dark:border-gray-400 focus:border-blue-700 dark:focus:border-white focus:outline-none text-base rounded-3xl text-neutral-900 dark:text-white placeholder:text-neutral-900 dark:placeholder:text-white"
-            placeholder="City name here"
-          />
-          <span class="material-symbols-outlined absolute right-3 text-gray-500 dark:text-white text-lg">search</span>
+          <form id="searchForm" class="relative">
+            <input
+              type="text"
+              name="search"
+              id="search"
+              class="w-full px-4 pr-10 py-2 border-2 border-gray-400 dark:border-gray-400 focus:border-blue-700 dark:focus:border-white focus:outline-none text-base rounded-3xl text-neutral-900 dark:text-white placeholder:text-neutral-900 dark:placeholder:text-white"
+              placeholder="City name here"
+            />
+            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-white text-lg pointer-events-none">search</span>
+          </form>
         </nav>
       </div>
     </header>
