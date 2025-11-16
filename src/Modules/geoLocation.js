@@ -1,0 +1,44 @@
+import { getDailyForecast, getHourlyForecast } from "./weatherApi";
+
+export function initRadarIcon() {
+  const radarBtn = document.querySelector("#radarIcon");
+  radarBtn.addEventListener("click", () => {
+    handleGetLocation();
+  });
+}
+
+function handleGetLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(success, error);
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+
+function success(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  getDailyForecast({ lat, lon });
+  getHourlyForecast({ lat, lon });
+}
+
+function error(error) {
+  switch (error.code) {
+    case error.PERMISSION_DENIED:
+      alert("User denied the request for Geolocation.");
+      break;
+
+    case error.POSITION_UNAVAILABLE:
+      alert("Location information is unavailable");
+      break;
+
+    case error.TIMEOUT:
+      alert("The request to get user location timed out.");
+      break;
+
+    case error.UNKNOWN_ERROR:
+      alert("An unknown error occurred.");
+      break;
+  }
+}

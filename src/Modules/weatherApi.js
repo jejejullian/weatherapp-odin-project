@@ -1,10 +1,20 @@
 import { setCurrentWeather, setForecastWeather } from "./state.js";
 import { render5DaysForecast, renderDailyForecast, renderHourlyForecast } from "./views.js";
 
-export async function getDailyForecast(city) {
+export async function getDailyForecast(cityOrCoords) {
   try {
     const apiKey = import.meta.env.VITE_API_KEY;
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`);
+    let url;
+
+    if (typeof cityOrCoords === "string") {
+      // Query by city name
+      url = `https://api.openweathermap.org/data/2.5/weather?q=${cityOrCoords}&appid=${apiKey}`;
+    } else {
+      // Query by coordinates
+      url = `https://api.openweathermap.org/data/2.5/weather?lat=${cityOrCoords.lat}&lon=${cityOrCoords.lon}&appid=${apiKey}`;
+    }
+
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(`Server error: ${response.status}`);
@@ -18,10 +28,20 @@ export async function getDailyForecast(city) {
   }
 }
 
-export async function getHourlyForecast(city) {
+export async function getHourlyForecast(cityOrCoords) {
   try {
     const apiKey = import.meta.env.VITE_API_KEY;
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`);
+    let url;
+
+    if (typeof cityOrCoords === "string") {
+      // Query by city name
+      url = `https://api.openweathermap.org/data/2.5/forecast?q=${cityOrCoords}&appid=${apiKey}`;
+    } else {
+      // Query by coordinates
+      url = `https://api.openweathermap.org/data/2.5/forecast?lat=${cityOrCoords.lat}&lon=${cityOrCoords.lon}&appid=${apiKey}`;
+    }
+
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(`Server error: ${response.status}`);
@@ -30,7 +50,7 @@ export async function getHourlyForecast(city) {
     const cityData = await response.json();
     setForecastWeather(cityData);
     renderHourlyForecast(cityData);
-    render5DaysForecast(cityData)
+    render5DaysForecast(cityData);
   } catch (err) {
     console.error("Failed to fetch weather:", err.message);
   }
