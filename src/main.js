@@ -2,6 +2,7 @@ import "./style.css";
 import { getDailyForecast, getHourlyForecast } from "./Modules/weatherApi";
 import { toggleLabel, toggleTheme, updateTimeDisplay } from "./Modules/helpers";
 import { getCurrentWeather } from "./Modules/state";
+import { initSearchCity } from "./Modules/search";
 
 window.addEventListener("load", async () => {
   const defaultCity = "Subang";
@@ -9,6 +10,7 @@ window.addEventListener("load", async () => {
   // initialize temperature toggle and theme toggle (dark/light)
   toggleLabel();
   toggleTheme();
+  initSearchCity()
 
   // fecth current weather and forecast data for the default city
   await getDailyForecast(defaultCity);
