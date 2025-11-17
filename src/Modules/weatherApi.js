@@ -1,11 +1,16 @@
 import { setCurrentWeather, setForecastWeather } from "./state.js";
 import { render5DaysForecast, renderDailyForecast, renderHourlyForecast } from "./views.js";
 
+/**
+ * Fetch current weather data
+ * @param {string|object} cityOrCoords - City name (string) or coordinates ({lat, lon})
+ */
 export async function getDailyForecast(cityOrCoords) {
   try {
     const apiKey = import.meta.env.VITE_API_KEY;
     let url;
 
+    // Build API URL based on parameter type
     if (typeof cityOrCoords === "string") {
       // Query by city name
       url = `https://api.openweathermap.org/data/2.5/weather?q=${cityOrCoords}&appid=${apiKey}`;
@@ -21,6 +26,8 @@ export async function getDailyForecast(cityOrCoords) {
     }
 
     const cityData = await response.json();
+
+    // Store data in state and render UI
     setCurrentWeather(cityData);
     renderDailyForecast(cityData);
   } catch (err) {
@@ -28,11 +35,16 @@ export async function getDailyForecast(cityOrCoords) {
   }
 }
 
+/**
+ * Fetch hourly and 5-day forecast data
+ * @param {string|object} cityOrCoords - City name (string) or coordinates ({lat, lon})
+ */
 export async function getHourlyForecast(cityOrCoords) {
   try {
     const apiKey = import.meta.env.VITE_API_KEY;
     let url;
 
+    // Build API URL based on parameter type
     if (typeof cityOrCoords === "string") {
       // Query by city name
       url = `https://api.openweathermap.org/data/2.5/forecast?q=${cityOrCoords}&appid=${apiKey}`;
@@ -48,6 +60,8 @@ export async function getHourlyForecast(cityOrCoords) {
     }
 
     const cityData = await response.json();
+
+    // Store data in state and render UI
     setForecastWeather(cityData);
     renderHourlyForecast(cityData);
     render5DaysForecast(cityData);
